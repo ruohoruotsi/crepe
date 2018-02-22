@@ -33,7 +33,7 @@ Currently we do not support importing CREPE as a python module, though this func
 - While in principle the code should run with any Keras backend, it has only been tested with the TensorFlow backend. The model was trained using Keras 2.1.3 and TensorFlow 1.5.0.
 - The pre-trained model included was trained on the MDB-STEM-Synth dataset [1], which contains vocal and instrumental recordings. It is therefore expected to work best on this type of audio signals.
 - Prediction is significantly faster if Keras (and the corresponding backend) is configured to run on GPU.
-- The current pre-trained model does not perform voicing activity detection (VAD), meaning it will return a continuous series of frequency values, including for sections of the recording where there is no pitch or silence. The output for such unpitched/silent segments will be arbitrary.
+- The current pre-trained model does not perform voicing activity detection (VAD), meaning it will return a continuous series of frequency values, including for sections of the recording where there is no pitch (e.g. silence). The output for such unpitched/silent segments will be arbitrary.
 
 
 ## References
