@@ -1,7 +1,11 @@
 CREPE Pitch Tracker
 ===================
 
-CREPE is a monophonic pitch tracker based on a deep convolutional neural network operating directly on the time-domain waveform input. Further details are provided in the following paper:
+CREPE is a monophonic pitch tracker based on a deep convolutional neural network operating directly on the time-domain waveform input. CREPE is state-of-the-art (as of early 2018), outperfoming popular pitch trackers such as pYIN and SWIPE:
+
+<img src=https://user-images.githubusercontent.com/3009670/36563051-ee6a69a0-17e6-11e8-8d7b-9a37d16ee7ad.png width=500>
+
+Further details are provided in the following paper:
 
 [CREPE: A Convolutional Representation for Pitch Estimation](https://arxiv.org/abs/1802.06182)<br/>
 Jong Wook Kim, Justin Salamon, Peter Li, Juan Pablo Bello.<br/>
