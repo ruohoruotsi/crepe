@@ -1,17 +1,20 @@
 from __future__ import print_function
 
+import sys
+from keras.layers import *
+from keras.models import Model
+from scipy.io import wavfile
+from resampy import resample
+import numpy as np
+from numpy.lib.stride_tricks import as_strided
+
 
 # open the file and read the data
-import sys
-
 if len(sys.argv) < 2:
     print("usage: %s wav_file_path [output_tsv_file_path]" % sys.argv[0], file=sys.stderr)
     sys.exit(-1)
 
 filename = sys.argv[1]
-
-from scipy.io import wavfile
-from resampy import resample
 
 try:
     srate, data = wavfile.read(filename)
@@ -25,9 +28,6 @@ except:
 
 
 # build the CNN model
-from keras.layers import *
-from keras.models import Model
-
 layers = [1, 2, 3, 4, 5, 6]
 filters = [1024, 128, 128, 128, 256, 512]
 widths = [512, 64, 64, 64, 64, 64]
@@ -52,9 +52,6 @@ model.compile('adam', 'binary_crossentropy')
 
 
 # transform the WAV data to frames
-import numpy as np
-from numpy.lib.stride_tricks import as_strided
-
 data = data.astype(np.float32)
 
 hop_length = int(srate / 100)
