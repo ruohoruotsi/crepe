@@ -11,7 +11,8 @@ from numpy.lib.stride_tricks import as_strided
 
 # open the file and read the data
 if len(sys.argv) < 2:
-    print("usage: %s wav_file_path [output_tsv_file_path]" % sys.argv[0], file=sys.stderr)
+    print("usage: %s wav_file_path [output_tsv_file_path]" % sys.argv[0],
+          file=sys.stderr)
     sys.exit(-1)
 
 filename = sys.argv[1]
@@ -38,8 +39,10 @@ y = x
 
 for layer, filters, width, strides in zip(layers, filters, widths, strides):
     y = BatchNormalization(name="conv%d-BN" % layer)(y)
-    y = Conv2D(filters, (width, 1), strides=strides, padding='same', activation='relu', name="conv%d" % layer)(y)
-    y = MaxPooling2D(pool_size=(2, 1), strides=None, padding='valid', name="conv%d-maxpool" % layer)(y)
+    y = Conv2D(filters, (width, 1), strides=strides, padding='same',
+               activation='relu', name="conv%d" % layer)(y)
+    y = MaxPooling2D(pool_size=(2, 1), strides=None, padding='valid',
+                     name="conv%d-maxpool" % layer)(y)
     y = Dropout(0.25, name="conv%d-dropout" % layer)(y)
 
 y = Permute((2, 1, 3), name="transpose")(y)
@@ -56,14 +59,17 @@ data = data.astype(np.float32)
 
 hop_length = int(srate / 100)
 n_frames = 1 + int((len(data) - 1024) / hop_length)
-frames = as_strided(data, shape=(1024, n_frames), strides=(data.itemsize, hop_length * data.itemsize))
+frames = as_strided(data, shape=(1024, n_frames),
+                    strides=(data.itemsize, hop_length * data.itemsize))
 frames = frames.transpose().reshape((n_frames, 1024, 1, 1))
 
 
 # run prediction and convert the frequency bin weights to Hz
 prediction = model.predict(frames, verbose=1)
-cents_mapping = np.expand_dims(np.linspace(0, 7180, 360) + 1997.3794084376191, axis=0)
-prediction_cents = np.sum(cents_mapping * prediction, axis=1) / np.sum(prediction, axis=1)
+cents_mapping = np.expand_dims(np.linspace(0, 7180, 360) + 1997.3794084376191,
+                               axis=0)
+prediction_cents = (np.sum(cents_mapping * prediction, axis=1) /
+                    np.sum(prediction, axis=1))
 prediction_hz = 10 * (2 ** (prediction_cents / 1200))
 prediction_hz[np.isnan(prediction_hz)] = 0
 
