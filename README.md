@@ -13,7 +13,7 @@ $ python crepe.py audio_file.wav audio_file.f0.tsv
 
 ## Caveats
 
-- The script requires Python packages `keras`, `numpy`, and `h5py` to be installed
+- The script requires Python packages `keras`, `numpy`, `resampy`, and `h5py` to be installed
 - The code should run with any Keras backends in theory, but it was only tested with the TensorFlow backend; Keras 2.1.3 and TensorFlow 1.5.0 was used during development.
 - This is a model pre-trained on MDB-STEM-Synth dataset [1], which contains vocal and instrumental sounds. Therefore this will work best for the similar audio signals.
 - Prediction will be significantly faster if Keras (and thus the corresponding backend) is configured to run on GPU.

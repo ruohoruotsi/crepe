@@ -11,8 +11,14 @@ if len(sys.argv) < 2:
 filename = sys.argv[1]
 
 from scipy.io import wavfile
+from resampy import resample
+
 try:
     srate, data = wavfile.read(filename)
+    if len(data.shape) == 2:
+        data = data[:, 0]
+    if srate != 16000:
+        data = resample(data, srate, 16000)
 except:
     print("could not read %s" % filename)
     sys.exit(-1)
@@ -42,14 +48,12 @@ y = Dense(360, activation='sigmoid', name="classifier")(y)
 
 model = Model(inputs=x, outputs=y)
 model.load_weights("crepe.h5")
+model.compile('adam', 'binary_crossentropy')
 
 
 # transform the WAV data to frames
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
-
-if len(data.shape) == 2:
-    data = data[:, 0]
 
 data = data.astype(np.float32)
 
@@ -63,8 +67,8 @@ frames = frames.transpose().reshape((n_frames, 1024, 1, 1))
 prediction = model.predict(frames, verbose=1)
 cents_mapping = np.expand_dims(np.linspace(0, 7180, 360) + 1997.3794084376191, axis=0)
 prediction_cents = np.sum(cents_mapping * prediction, axis=1) / np.sum(prediction, axis=1)
-prediction_hz = 10 * (2 ** (prediction_cents / 1200)) * (srate / 16000)
-
+prediction_hz = 10 * (2 ** (prediction_cents / 1200))
+prediction_hz[np.isnan(prediction_hz)] = 0
 
 # write prediction as TSV
 outfile = len(sys.argv) > 2 and sys.argv[2] or filename + ".f0.tsv"
