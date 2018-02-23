@@ -23,6 +23,7 @@ try:
         data = data[:, 0]
     if srate != 16000:
         data = resample(data, srate, 16000)
+        srate = 16000
 except:
     print("could not read %s" % filename)
     sys.exit(-1)
