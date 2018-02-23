@@ -20,7 +20,7 @@ filename = sys.argv[1]
 try:
     srate, data = wavfile.read(filename)
     if len(data.shape) == 2:
-        data = data[:, 0]
+        data = data.mean(1)
     if srate != 16000:
         data = resample(data, srate, 16000)
         srate = 16000
